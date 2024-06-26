@@ -14,10 +14,10 @@ spec:
     ports:
         - name: http
           port: 80 # external port
-        #   nodePort: 30080 # publicly accessible on this port
+          nodePort: 31080 # publicly accessible on this port
 
-    # type: NodePort
-    type: LoadBalancer
+    type: NodePort
+    # type: LoadBalancer
 
 ---
 # Queue Service
