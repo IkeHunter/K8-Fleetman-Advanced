@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim # What do we want with the volume
 metadata:
   name: mongo-pvc
 spec:
-  # storageClassName: mylocalstorage # used to bind with pers vol
-  storageClassName: cloud-ssd
+  storageClassName: mylocalstorage # used to bind with pers vol
+  # storageClassName: cloud-ssd
   accessModes:
     - ReadWriteOnce
   resources:

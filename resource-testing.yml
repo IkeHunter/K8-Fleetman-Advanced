@@ -1,29 +1,29 @@
-# Queue Microservice
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: queue
-spec:
-  selector:
-    matchLabels:
-      app: queue
-  replicas: 2
-  template: # pod template
-    metadata:
-      labels:
-        app: queue
-    spec:
-      containers:
-        - name: queue
-          #   image: richardchesterwood/k8s-fleetman-queue:release2-arm64
-          image: richardchesterwood/k8s-fleetman-queue:release2
-          resources: # for pods in this container to run comfortably, it needs these resources
-            # Used for scheduling:
-            requests:
-              memory: 300Mi
-              cpu: 100m
-            # Used for health:
-            limits:
-              memory: 500Mi
-              cpu: 200m
+# # Queue Microservice
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: queue
+# spec:
+#   selector:
+#     matchLabels:
+#       app: queue
+#   replicas: 2
+#   template: # pod template
+#     metadata:
+#       labels:
+#         app: queue
+#     spec:
+#       containers:
+#         - name: queue
+#           #   image: richardchesterwood/k8s-fleetman-queue:release2-arm64
+#           image: richardchesterwood/k8s-fleetman-queue:release2
+#           resources: # for pods in this container to run comfortably, it needs these resources
+#             # Used for scheduling:
+#             requests:
+#               memory: 300Mi
+#               cpu: 100m
+#             # Used for health:
+#             limits:
+#               memory: 500Mi
+#               cpu: 200m
               

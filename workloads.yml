@@ -1,6 +1,29 @@
 ### Project Workloads ###
 #########################
-
+# Queue Microservice
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queue
+spec:
+  selector:
+    matchLabels:
+      app: queue
+  replicas: 1
+  template: # pod template
+    metadata:
+      labels:
+        app: queue
+    spec:
+      containers:
+        - name: queue
+          #   image: richardchesterwood/k8s-fleetman-queue:release2-arm64
+          image: richardchesterwood/k8s-fleetman-queue:release2
+          resources: # for pods in this container to run comfortably, it needs these resources
+            requests:
+              memory: 300Mi
+              cpu: 100m
+---
 # Position Simulator Microservice
 # This doesn't need a service since it doesn't have frontend or rest api.
 apiVersion: apps/v1
@@ -24,6 +47,10 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: production-microservice
+          resources:
+            requests:
+              memory: 200Mi
+              cpu: 50m
 
 ---
 # Position Tracker Microservice
@@ -48,6 +75,10 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: production-microservice
+          resources:
+            requests:
+              memory: 200Mi
+              cpu: 50m
 
 ---
 # API Gateway Microservice
@@ -72,6 +103,11 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: production-microservice
+          
+          resources:
+            requests:
+              memory: 300Mi
+              cpu: 100m
 
 ---
 # Web App Microservice
@@ -96,3 +132,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: production-microservice
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m

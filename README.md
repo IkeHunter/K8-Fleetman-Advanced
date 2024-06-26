@@ -42,3 +42,14 @@ If a container tries taking more memory than set for limit, then it will be term
 #### Theory
 
 K8s is able to do this by utilizing *cgroups*, or "control groups", a default feature in Linux.
+
+## Metrics
+
+Commands:
+
+```sh
+# Pod usage
+kubectl top pod
+# Node usage
+kubectl top node
+```
