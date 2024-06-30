@@ -78,3 +78,15 @@ Get yml version of autoscale:
 ```sh
 kubectl get hpa api-gateway -o yaml
 ```
+
+## QoS and Evictions
+
+### QoS
+
+> Quality of Service
+
+K8s applies labels to pods depending on memory and cpu:
+
+- **QoS: Guaranteed**: If the pod has a mem/cpu request and limit set
+- **QoS: Burstable**: If the pod only has a mem/cpu request set
+- **QoS: BestEffort**: If neither mem/cpu request or limit is set

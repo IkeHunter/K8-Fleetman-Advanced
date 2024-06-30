@@ -90,7 +90,7 @@ spec:
   selector:
     matchLabels:
       app: api-gateway
-  replicas: 1
+  replicas: 3
   template: # pod template
     metadata:
       labels:
@@ -101,6 +101,10 @@ spec:
           #   image: richardchesterwood/k8s-fleetman-api-gateway:release2-arm64
           # image: richardchesterwood/k8s-fleetman-api-gateway:release2
           image: richardchesterwood/k8s-fleetman-api-gateway:performance
+          readinessProbe: # Check if pod is ready to receive requests
+            httpGet:
+              path: /
+              port: 8080
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: production-microservice
