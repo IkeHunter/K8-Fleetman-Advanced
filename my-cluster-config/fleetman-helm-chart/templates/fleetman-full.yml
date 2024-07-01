@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Append the release name from helm to pod name
+  name: {{ .Release.Name }}-webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  replicas: {{ .Values.webapp.replicaCount }} # Accessing nested values from values.yaml
+  template: # template for the pods
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      # Using templates
+      containers:
+        # #{#{- template "webappImage" . #}#}
+        {{- include "webappImage" . | indent 6 }}
+      
+      
+      # containers:
+      #   - name: webapp
+          # Example problem 'A' solution:
+          # Use "lower" function to force lowercase
+          # image: #{#{ lower .Values.dockerRepoName #}#}/k8s-fleetman-helm-demo:v1.0.0-dev
+          
+          # Example problem 'B' solution:
+          # Use "default" function to specify default value if not defined
+          # image: #{#{ default "richardchesterwood" .Values.dockerRepoName #}#}/k8s-fleetman-helm-demo:v1.0.0-dev
+          
+          # Example problem 'C' solution:
+          # Use pipe symbol to connect functions together, output becomes input to next function
+          # image: {{ .Values.dockerRepoName | default "richardchesterwood" | upper }}/k8s-fleetman-helm-demo:v1.0.0-dev
+          
+          # Example problem 'D' solution:
+          # Use flow control
+          # image: richardchesterwood/k8s-fleetman-helm-demo:v1.0.0#{#{ if eq .Values.development true #}#}-dev#{#{ end #}#}
+          
+          
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-fleetman-webapp
+
+spec:
+  selector:
+    app: webapp
+
+  ports:
+    - name: http
+      port: 80
+      nodePort: {{ .Values.webapp.nodePort }}
+
+  type: NodePort

@@ -90,3 +90,128 @@ K8s applies labels to pods depending on memory and cpu:
 - **QoS: Guaranteed**: If the pod has a mem/cpu request and limit set
 - **QoS: Burstable**: If the pod only has a mem/cpu request set
 - **QoS: BestEffort**: If neither mem/cpu request or limit is set
+
+## Helm
+
+### Commands
+
+**Add a repo:**
+
+```sh
+helm repo add [label] [repo-link]
+```
+
+**Add chart:**
+
+```sh
+helm install [label] [repo-label]/[chart-name]
+```
+
+**Set variable via cli:**
+
+```sh
+helm upgrade [chart-label] [repo-label]/[chart] --set [parent].[variable]=[new-value]
+```
+
+**Show default values for chart:**
+
+```sh
+helm show values [repo-label]/[chart]
+```
+
+**Output values to file (values.yml):**
+
+```sh
+helm show values [repo-label]/[chart] > values.yml
+```
+
+**Apply values file:**
+
+```sh
+helm upgrade [chart-label] [repo-label]/[chart] --values=values.yml
+# Ex: helm upgrade monitoring prom-repo/kube-prometheus-stack --values=values.yml
+```
+
+**Download chart locally:**
+
+```sh
+helm pull [repo-label]/[chart] --untar=true
+# Ex: helm pull prom-repo/kube-prometheus-stack --untar=true
+```
+
+**Generate template from helm chart:**
+
+```sh
+helm template [chart-label] [chart-location] [...flags]
+# Ex: helm template monitoring ./kube-prometheus-stack/ --values=./kube-prometheus-stack/myvalues.yml
+# Note: chart-location could be directory, or [repo-label]/[chart]
+```
+
+**Apply variables to local chart:**
+
+```sh
+helm upgrade [chart-label] --values=[./path/to/values.yml] [./path/to/chart]
+# Ex: helm upgrade monitoring --values=./kube-prometheus-stack/myvalues.yml .
+```
+
+**Create new chart:**
+
+```sh
+helm create [chart-name]
+# Ex: helm create fleetman-helm-chart
+```
+
+**Testing template generation of custom chart (inside its directory):**
+
+```sh
+helm template .
+```
+
+This will combine all yaml files into one file.
+
+### Notes
+
+Do not put custom values in values.yaml of chart, make custom overrides file.
+
+When working with helm, need to avoid "snowflake" servers: <https://martinfowler.com/bliki/SnowflakeServer.html>, instead need to make "phoenix" servers: <https://martinfowler.com/bliki/PhoenixServer.html> by making templates, etc.
+
+### About Custom Charts
+
+Files:
+
+- `Chart.yaml`: useful info about chart, like package.json for meta info
+- `templates/`: All yml files defined in here will be sent through processor to create k8s yml files.
+- `values.yaml`: Variables to switch out in template files
+- `templates/_file-name.tpl`: Named templates / Partials. Can have any extension, convention to use .tpl
+- `charts/`: External charts to use
+
+### Templating
+
+Template processor uses Go templating language
+
+When accessing variables from `values.yaml`, reference it like this:
+
+```txt
+replicas: {{ .Values.replicaCount }}
+```
+
+Flow control using prefix notation:
+
+```yaml
+image: richardchesterwood/k8s-fleetman-helm-demo:v1.0.0{{ if .Values.development }}-dev{{ end }}
+```
+
+If the env is dev, it will render the image with -dev appended to tag; otherwise, will skip the rest of the line of logic
+
+#### Named templates
+
+When using template tag like:
+
+```txt
+{{- template "sometemplate" . }}
+```
+
+- The dot represents context for variables, start from '.' context.
+- The dash tells parser to remove leftover blank lines.
+
+Difference between _template_ and _include_ directives: when using include, can produce yaml from pipelines.

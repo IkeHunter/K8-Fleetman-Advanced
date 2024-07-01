@@ -1,0 +1,22 @@
+# Custom nested variable
+webapp:
+  replicaCount: 2
+  nodePort: 30080
+  
+# dockerRepoName: richardchesterwood
+
+# Example problem 'A':
+# If the casing might be wrong
+# dockerRepoName: ricHardChesterWood
+
+# Example problem 'B':
+# Variable not defined.
+
+# Example problem 'C':
+# Need to chain functions together (can toggle this in/out)
+# dockerRepoName: ricHardChesterWood
+
+# Example problem 'D':
+# Need to switch from dev to prod environment based on simple variable
+development: true
+dockerRepoName: richardchesterwood
