@@ -228,3 +228,10 @@ echo secret-value | base64 -d
 ```
 
 Secrets are used to just add another layer of defense. They should be used for values that you wouldn't want someone seeing if peeking over your shoulder in public, but it is fine if a coworker has access to the system and can see the secret. Do not use for hyper-sensitive values like aws credentials.
+
+## Ingress
+
+Levels:
+
+- Use level 4 if doing websockets
+- Use level 7 otherwise
