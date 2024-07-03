@@ -215,3 +215,16 @@ When using template tag like:
 - The dash tells parser to remove leftover blank lines.
 
 Difference between _template_ and _include_ directives: when using include, can produce yaml from pipelines.
+
+## Secrets
+
+When using the 'data' block, values need to be base64 encoded. Instead need to use stringData block for automatic encoding.
+
+Secrets are unsecured, can easily get values by:
+
+```sh
+kubectl get secret secret-name -o yaml
+echo secret-value | base64 -d
+```
+
+Secrets are used to just add another layer of defense. They should be used for values that you wouldn't want someone seeing if peeking over your shoulder in public, but it is fine if a coworker has access to the system and can see the secret. Do not use for hyper-sensitive values like aws credentials.

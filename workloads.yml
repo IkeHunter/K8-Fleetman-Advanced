@@ -47,10 +47,31 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: production-microservice
+          #   # Method 1 for reading configmap - Individual values
+          #   - name: DATABASE_URL
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         name: global-database-config
+          #         key: database.url
+          # # Method 2 - Apply as env variables
+          # envFrom:
+          #   - configMapRef:
+          #     name: global-database-config
+
+          # Method 3 - Using volumes
+          # This will create file for each key
+          volumeMounts:
+            - name: database-config-volume
+              mountPath: /etc/any/directory/config # does not need to exist beforehand
+
           resources:
             requests:
               memory: 200Mi
               cpu: 50m
+      volumes:
+        - name: database-config-volume
+          configMap:
+            name: global-database-config
 
 ---
 # Position Tracker Microservice
@@ -108,7 +129,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: production-microservice
-          
+
           resources:
             requests:
               memory: 300Mi
